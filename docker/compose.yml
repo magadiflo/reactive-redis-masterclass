@@ -1,0 +1,7 @@
+services:
+  s-redis:
+    image: redis:8.0.3-alpine
+    container_name: c-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'

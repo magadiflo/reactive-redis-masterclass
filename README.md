@@ -1,5 +1,6 @@
 # Reactive Redis Masterclass For Java Spring Boot Developers
 
-Curso tomado de `Udemy` del tutor `Vinoth Selvaraj`.
+- Curso tomado en `Udemy` del autor `Vinoth Selvaraj`.
+- [Vinsguru - Web oficial del tutor Vinoth Selvaraj](https://www.vinsguru.com/)
 
 ---
