@@ -1,9 +1,11 @@
 package dev.magadiflo.test;
 
+import dev.magadiflo.test.dto.Student;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.redisson.api.RMapReactive;
 import org.redisson.client.codec.StringCodec;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -32,6 +34,21 @@ class Lec06MapTest extends BaseTest {
         );
 
         StepVerifier.create(map.putAll(javaMap).then())
+                .verifyComplete();
+    }
+
+    @Test
+    void mapTest3() {
+        TypedJsonJacksonCodec codec = new TypedJsonJacksonCodec(Integer.class, Student.class);
+        RMapReactive<Integer, Student> map = this.client.getMap("users", codec);
+
+        Student student1 = new Student("Milagros", 19, "Lima");
+        Student student2 = new Student("Kiara", 24, "Rumisapa");
+
+        Mono<Student> mono1 = map.put(1, student1);
+        Mono<Student> mono2 = map.put(2, student2);
+
+        StepVerifier.create(mono1.concatWith(mono2).then())
                 .verifyComplete();
     }
 }
