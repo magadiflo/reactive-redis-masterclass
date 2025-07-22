@@ -1,8 +1,11 @@
 package dev.magadiflo.test;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.redisson.api.RDequeReactive;
 import org.redisson.api.RListReactive;
+import org.redisson.api.RQueueReactive;
 import org.redisson.client.codec.LongCodec;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -42,6 +45,36 @@ class Lec09ListQueueStackTest extends BaseTest {
 
         StepVerifier.create(list.size())
                 .expectNext(10)
+                .verifyComplete();
+    }
+
+    @Test
+    void queueTest() {
+        RQueueReactive<Long> queue = this.client.getQueue("number-input", LongCodec.INSTANCE);
+        Mono<Void> queuePoll = queue.poll() //elimina items desde el inicio (1, 2, 3, 4)
+                .repeat(3)
+                .doOnNext(value -> log.info("{}", value))
+                .then();
+        StepVerifier.create(queuePoll)
+                .verifyComplete();
+
+        StepVerifier.create(queue.size())
+                .expectNext(6)
+                .verifyComplete();
+    }
+
+    @Test
+    void stackTest() { //stack en java es obsoleto, deberíamos usar en su reemplazo el Deque
+        RDequeReactive<Long> deque = this.client.getDeque("number-input", LongCodec.INSTANCE);
+        Mono<Void> dequePollLast = deque.pollLast()
+                .repeat(3)
+                .doOnNext(value -> log.info("{}", value))
+                .then();
+        StepVerifier.create(dequePollLast)
+                .verifyComplete();
+
+        StepVerifier.create(deque.size())
+                .expectNext(2)
                 .verifyComplete();
     }
 }
