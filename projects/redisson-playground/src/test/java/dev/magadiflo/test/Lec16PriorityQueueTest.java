@@ -42,6 +42,29 @@ class Lec16PriorityQueueTest extends BaseTest {
     }
 
     @Test
+    void producer2() {
+        Flux.interval(Duration.ofSeconds(1))
+                .map(l -> l.intValue() * 5)
+                .doOnNext(i -> {
+                    UserOrder u1 = UserOrder.builder().id(i + 1).category(Category.GUEST).build();
+                    UserOrder u2 = UserOrder.builder().id(i + 2).category(Category.STD).build();
+                    UserOrder u3 = UserOrder.builder().id(i + 3).category(Category.PRIME).build();
+                    UserOrder u4 = UserOrder.builder().id(i + 4).category(Category.STD).build();
+                    UserOrder u5 = UserOrder.builder().id(i + 5).category(Category.GUEST).build();
+
+                    Mono<Void> mono = Flux.just(u1, u2, u3, u4, u5)
+                            .flatMap(userOrder -> this.priorityQueue.add(userOrder))
+                            .then();
+
+                    StepVerifier.create(mono)
+                            .verifyComplete();
+
+                }).subscribe();
+
+        this.sleep(600_000);
+    }
+
+    @Test
     void consumer() {
         this.priorityQueue.takeItems()
                 .delayElements(Duration.ofMillis(500))
