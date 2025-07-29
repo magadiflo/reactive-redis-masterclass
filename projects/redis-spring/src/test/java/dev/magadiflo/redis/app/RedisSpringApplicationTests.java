@@ -1,4 +1,4 @@
-package dev.magadiflo.redis_spring;
+package dev.magadiflo.redis.app;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.RepeatedTest;
