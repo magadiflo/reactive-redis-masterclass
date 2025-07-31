@@ -1,6 +1,7 @@
 package dev.magadiflo.redis.app.fib.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -9,11 +10,17 @@ import org.springframework.stereotype.Service;
 public class FibService {
 
     @Cacheable(cacheNames = "math:fib", key = "#index")
-    public int getFib(int index, String name) {
-        log.info("Calculando fib para índice: {} , nombre: {}", index, name);
+    public int getFib(int index) {
+        log.info("Calculando fib para índice: {}", index);
         int fib = this.fib(index);
         log.info("Cálculo obtenido: {}", fib);
         return fib;
+    }
+
+    @CacheEvict(cacheNames = "math:fib", key = "#index")
+    public void clearCache(int index) {
+        log.info("Limpiando hash key");
+
     }
 
     // Intencional 2^N, usamos recursividad intencionalmente,
