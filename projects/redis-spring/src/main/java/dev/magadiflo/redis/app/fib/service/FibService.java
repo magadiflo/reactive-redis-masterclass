@@ -3,6 +3,7 @@ package dev.magadiflo.redis.app.fib.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -20,6 +21,14 @@ public class FibService {
     @CacheEvict(cacheNames = "math:fib", key = "#index")
     public void clearCache(int index) {
         log.info("Limpiando hash key");
+
+    }
+
+    // Cada 10 segundos que limpie todas las entradas del math:fib
+    @Scheduled(fixedRate = 10_000)
+    @CacheEvict(cacheNames = "math:fib", allEntries = true)
+    public void clearCache() {
+        log.info("Limpiando todas las keys del math:fib");
 
     }
 
