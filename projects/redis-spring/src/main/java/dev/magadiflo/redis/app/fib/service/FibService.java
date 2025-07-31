@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class FibService {
 
-    @Cacheable(cacheNames = "math:fib")
-    public int getFib(int index) {
-        log.info("Calculando fib para índice: {}", index);
+    @Cacheable(cacheNames = "math:fib", key = "#index")
+    public int getFib(int index, String name) {
+        log.info("Calculando fib para índice: {} , nombre: {}", index, name);
         int fib = this.fib(index);
         log.info("Cálculo obtenido: {}", fib);
         return fib;
