@@ -23,7 +23,19 @@ public class CityService {
 
     public Mono<City> getCity(final String zipCode) {
         return this.cityMap.get(zipCode)
-                .switchIfEmpty(this.cityClient.getCity(zipCode)
-                        .flatMap(city -> this.cityMap.fastPut(zipCode, city).thenReturn(city)));
+                .doOnNext(city -> log.info("Cache HIT - Obteniendo desde Redis para zipCode: {}", zipCode))
+                .switchIfEmpty(Mono.defer(() -> {
+                    log.info("Cache MISS - Consultando servicio externo para zipCode: {}", zipCode);
+                    return this.cityClient.getCity(zipCode)
+                            .flatMap(city -> this.cityMap.fastPut(zipCode, city)
+                                    .doOnNext(result -> {
+                                        String message = result ?
+                                                "Nuevo valor guardado en Redis para zipCode: {}" :
+                                                "ZipCode {} ya existía en Redis (valor reemplazado)";
+                                        log.info(message, zipCode);
+                                    })
+                                    .thenReturn(city));
+
+                }));
     }
 }

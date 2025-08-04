@@ -20,6 +20,7 @@ public class CityClient {
     }
 
     public Mono<City> getCity(final String zipCode) {
+        log.info("Llamando al servicio externo para zipCode: {}", zipCode);
         return this.webClient
                 .get()
                 .uri("/{zipCode}", zipCode)
