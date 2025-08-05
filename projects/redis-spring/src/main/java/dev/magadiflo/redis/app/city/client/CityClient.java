@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -26,5 +27,13 @@ public class CityClient {
                 .uri("/{zipCode}", zipCode)
                 .retrieve()
                 .bodyToMono(City.class);
+    }
+
+    public Flux<City> getAllCities() {
+        log.info("Llamando al servicio externo para obtener todas las ciudades");
+        return this.webClient
+                .get()
+                .retrieve()
+                .bodyToFlux(City.class);
     }
 }
