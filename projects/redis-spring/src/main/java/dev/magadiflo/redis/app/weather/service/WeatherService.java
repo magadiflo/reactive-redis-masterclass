@@ -20,7 +20,7 @@ public class WeatherService {
         return 0;
     }
 
-    @Scheduled(fixedRate = 10_000)
+    //@Scheduled(fixedRate = 10_000) // Comentado para que poder trabajar con otras lecciones y no se esté ejecutando cada 10 segundos
     public void update() {
         log.info("Actualizando clima");
         IntStream.rangeClosed(1, 5)

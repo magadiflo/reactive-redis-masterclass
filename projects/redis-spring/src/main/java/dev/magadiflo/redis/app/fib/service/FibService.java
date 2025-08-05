@@ -25,7 +25,7 @@ public class FibService {
     }
 
     // Cada 10 segundos que limpie todas las entradas del math:fib
-    @Scheduled(fixedRate = 10_000)
+    //@Scheduled(fixedRate = 10_000) // Comentado para que poder trabajar con otras lecciones y no se esté ejecutando cada 10 segundos
     @CacheEvict(cacheNames = "math:fib", allEntries = true)
     public void clearCache() {
         log.info("Limpiando todas las keys del math:fib");
