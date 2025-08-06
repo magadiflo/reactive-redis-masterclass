@@ -1,3 +1,17 @@
+server:
+  port: 8080
+  error:
+    include-message: always
+
 spring:
   application:
     name: redis-performance
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/db_redis_performance
+    username: postgres
+    password: magadiflo
+
+logging:
+  level:
+    io.r2dbc.postgresql.QUERY: debug
+    io.r2dbc.postgresql.PARAM: debug
