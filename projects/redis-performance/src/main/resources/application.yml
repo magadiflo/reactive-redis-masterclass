@@ -11,7 +11,7 @@ spring:
     username: postgres
     password: magadiflo
 
-logging:
-  level:
-    io.r2dbc.postgresql.QUERY: debug
-    io.r2dbc.postgresql.PARAM: debug
+#logging:
+#  level:
+#    io.r2dbc.postgresql.QUERY: debug
+#    io.r2dbc.postgresql.PARAM: debug
