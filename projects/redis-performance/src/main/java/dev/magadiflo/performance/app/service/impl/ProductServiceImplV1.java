@@ -14,7 +14,7 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ProductServiceImpl implements ProductService {
+public class ProductServiceImplV1 implements ProductService {
 
     private final ProductRepository productRepository;
 

@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(path = "/api/v1/products")
-public class ProductController {
+public class ProductControllerV1 {
 
     private final ProductService productService;
 
