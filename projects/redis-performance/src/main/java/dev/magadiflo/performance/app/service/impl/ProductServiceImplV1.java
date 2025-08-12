@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service
+@Service("v1")
 public class ProductServiceImplV1 implements ProductService {
 
     private final ProductRepository productRepository;
@@ -33,6 +33,14 @@ public class ProductServiceImplV1 implements ProductService {
                     return product;
                 })
                 .flatMap(this.productRepository::save)
-                .switchIfEmpty(Mono.error(() -> new NoSuchElementException("No existe el producto con id: " + productId)));
+                .switchIfEmpty(Mono.error(() -> new NoSuchElementException("[Update] No existe el producto con id: " + productId)));
+    }
+
+    @Override
+    @Transactional
+    public Mono<Void> deleteProduct(Integer productId) {
+        return this.productRepository.findById(productId)
+                .flatMap(product -> this.productRepository.deleteById(productId))
+                .switchIfEmpty(Mono.error(() -> new NoSuchElementException("[Delete] No existe el producto con id: " + productId)));
     }
 }

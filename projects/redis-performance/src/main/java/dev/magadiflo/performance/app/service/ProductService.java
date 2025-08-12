@@ -7,4 +7,6 @@ public interface ProductService {
     Mono<Product> getProduct(Integer productId);
 
     Mono<Product> updateProduct(Integer productId, Product product);
+
+    Mono<Void> deleteProduct(Integer productId);
 }
