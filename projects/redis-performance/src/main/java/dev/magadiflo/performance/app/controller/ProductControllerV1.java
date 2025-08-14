@@ -1,0 +1,39 @@
+package dev.magadiflo.performance.app.controller;
+
+import dev.magadiflo.performance.app.entity.Product;
+import dev.magadiflo.performance.app.service.ProductService;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Mono;
+
+@RestController
+@RequestMapping(path = "/api/v1/products")
+public class ProductControllerV1 {
+
+
+    private final ProductService productService;
+
+    public ProductControllerV1(@Qualifier("v1") ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping(path = "/{productId}")
+    public Mono<ResponseEntity<Product>> getProduct(@PathVariable Integer productId) {
+        return this.productService.getProduct(productId)
+                .map(ResponseEntity::ok);
+    }
+
+    @PutMapping(path = "/{productId}")
+    public Mono<ResponseEntity<Product>> updateProduct(@PathVariable Integer productId,
+                                                       @RequestBody Mono<Product> productMono) {
+        return productMono
+                .flatMap(product -> this.productService.updateProduct(productId, product))
+                .map(ResponseEntity::ok);
+    }
+}
