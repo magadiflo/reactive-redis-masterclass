@@ -31,7 +31,7 @@ public class CityService {
     }
 
     // Method que actualiza periódicamente la información en redis
-    @Scheduled(fixedRate = 10_000) // Que se ejecute periódicamente cada 10 segundos
+    //@Scheduled(fixedRate = 10_000) // Que se ejecute periódicamente cada 10 segundos
     public void updateCity() {
         this.cityClient.getAllCities()
                 .collectList()
