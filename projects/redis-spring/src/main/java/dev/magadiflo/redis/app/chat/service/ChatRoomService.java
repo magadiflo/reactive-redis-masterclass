@@ -2,6 +2,7 @@ package dev.magadiflo.redis.app.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RListReactive;
 import org.redisson.api.RTopicReactive;
 import org.redisson.api.RedissonReactiveClient;
 import org.redisson.client.codec.StringCodec;
@@ -26,17 +27,19 @@ public class ChatRoomService implements WebSocketHandler {
     public Mono<Void> handle(WebSocketSession session) {
         String room = this.getChatRoomName(session);
         RTopicReactive topic = this.client.getTopic(room, StringCodec.INSTANCE);
+        RListReactive<String> list = this.client.getList("history:" + room, StringCodec.INSTANCE);
 
         //subscribe
         Mono<Void> incomingFlux = session.receive()
                 .map(WebSocketMessage::getPayloadAsText)
-                .flatMap(topic::publish)
+                .flatMap(message -> list.add(message).then(topic.publish(message)))
                 .doOnError(throwable -> log.error(throwable.getMessage()))
                 .doFinally(signalType -> log.info("Subscriber finally {}", signalType))
                 .then();
 
         //publisher
         Flux<WebSocketMessage> outgoingFlux = topic.getMessages(String.class)
+                .startWith(list.iterator())
                 .map(session::textMessage)
                 .doOnError(throwable -> log.error(throwable.getMessage()))
                 .doFinally(signalType -> log.info("Publisher finally {}", signalType));
