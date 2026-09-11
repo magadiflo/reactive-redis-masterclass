@@ -29,8 +29,8 @@ class Lec08LocalCacheMapTest extends BaseTest {
                 .codec(new TypedJsonJacksonCodec(Integer.class, Student.class))
                 .syncStrategy(LocalCachedMapOptions.SyncStrategy.UPDATE)
                 .reconnectionStrategy(LocalCachedMapOptions.ReconnectionStrategy.CLEAR)
-                .retryAttempts(3)                           // Número de reintentos
-                .retryInterval(Duration.ofMillis(1500));   // Intervalo entre reintentos
+                .retryAttempts(3)                         // Reintentos para un comando puntual (p. ej. HGET), no para la reconexión TCP
+                .retryInterval(Duration.ofMillis(1500)); // Pausa entre cada uno de esos reintentos
 
         this.studentsMap = redissonClient.getLocalCachedMap(mapOptions);
     }
