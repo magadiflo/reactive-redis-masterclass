@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: redis-spring
+  # API Versioning (Spring Boot 4)
+  webflux:
+    api-version:
+      required: true
+      supported: 1,2
+      use:
+        path-segment: 1
+
+city:
+  service:
+    url: http://localhost:3030/open-city-api
